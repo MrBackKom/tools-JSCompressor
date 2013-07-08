@@ -71,15 +71,13 @@ function build(targetPath){
     if(targetPath){
         var _targetStat = fs.statSync(targetPath)
         if(_targetStat.isFile()){//如果是文件
-
-//
             //如果是js文件,压缩该文件然后coye到对应,文件名，文件的相对路径
             var fileName = targetPath.substring(targetPath.lastIndexOf("/"),targetPath.length);
             var _devIndex = targetPath.indexOf("/dev/") + 5;
             var _lastBlank = targetPath.lastIndexOf("/");
             var _path = targetPath.substring(_devIndex,_lastBlank) ;
             var finalCode = "";
-            if(fileName.indexOf(".js") > -1 && fileName.indexOf("-min") <0){
+            if(fileName.indexOf(".js") > -1 && fileName.indexOf("-min") <0 && fileName.indexOf(".min") <0){
                 console.log("正在处理 " + targetPath);
 
                 ast = uglify.minify(targetPath);
