@@ -6,11 +6,13 @@
  * To change this template use File | Settings | File Templates.
  */
 var uglify = require("uglify-js");
+var cleanCSS = require('clean-css');
 var fs = require("fs");
-var args = process.argv;
 
+var args = process.argv;
 var _devPath = "",
     _outputPath = "";
+
 /**
  * 开始编译，便利所有的目录结构
  * @param targetDir
@@ -79,12 +81,21 @@ function build(targetPath){
             var finalCode = "";
             if(fileName.indexOf(".js") > -1 && fileName.indexOf("-min") <0 && fileName.indexOf(".min") <0){
                 console.log("正在处理 " + targetPath);
-
-                ast = uglify.minify(targetPath);
+                var ast = uglify.minify(targetPath);
                 finalCode = ast.code;
                 var fileOut = _outputPath + "/" + _path + fileName;
                 fs.writeFileSync(fileOut,finalCode,"utf8");
-            }else{
+            }
+            else if(fileName.indexOf(".css") > -1){
+                console.log("正在处理 " + targetPath);
+                var cssContent = fs.readFileSync(targetPath,"utf8")
+                var ast = cleanCSS.process(cssContent);
+                var fileOut = _outputPath + "/" + _path + fileName;
+                fs.writeFileSync(fileOut,ast,"utf8");
+
+
+            }
+            else{
                 var fileOut = _outputPath + "/" +_path + fileName;
                 copyFile(targetPath,fileOut);
             }
